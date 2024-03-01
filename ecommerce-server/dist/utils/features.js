@@ -9,7 +9,7 @@ export const connectDB = (uri) => {
         .then((c) => console.log(`DB Connected to ${c.connection.host}`))
         .catch((e) => console.log(e));
 };
-export const invalidateCache = async ({ product, order, admin, }) => {
+export const invalidateCache = async ({ product, order, admin, userId, orderId, }) => {
     if (product) {
         const productKeys = [
             "latestProducts",
@@ -23,6 +23,12 @@ export const invalidateCache = async ({ product, order, admin, }) => {
         myCache.del(productKeys);
     }
     if (order) {
+        const ordersKeys = [
+            "all-orders",
+            `my-orders-${userId}`,
+            `order-${orderId}`,
+        ];
+        myCache.del(ordersKeys);
     }
     if (admin) {
     }
