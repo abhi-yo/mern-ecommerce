@@ -22,7 +22,7 @@ export const newOrder = TryCatch(
       return next(new ErrorHandler("Please fill all the fields", 400));
     }
 
-    await Order.create({
+    const order = await Order.create({
       shippingInfo,
       orderItems,
       user,
@@ -34,11 +34,13 @@ export const newOrder = TryCatch(
     });
 
     await reduceStock(orderItems);
+    
     await invalidateCache({
       product: true,
       order: true,
       admin: true,
       userId: user,
+      productId: order.orderItems.map((i) => String(i.productId)),
     });
     return res.status(201).json({
       success: true,
@@ -144,13 +146,6 @@ export const deleteOrder = TryCatch(async (req, res, next) => {
 
   await order.deleteOne();
 
-  await invalidateCache({
-    product: false,
-    order: true,
-    admin: true,
-    userId: order.user,
-    orderId: String(order._id),
-  });
   return res.status(200).json({
     success: true,
     message: "Order deleted successfully",

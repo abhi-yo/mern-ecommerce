@@ -45,6 +45,7 @@ export type InvalidateCacheProps = {
   admin?: boolean;
   userId?: string;
   orderId?: string;
+  productId?: string | string[] | undefined;
 };
 
 export type OrderItemType = {
@@ -62,7 +63,7 @@ export type ShippingInfoType = {
   photo: string;
   price: number;
   quantity: number;
-  productId: string;
+  productId?: string | string[] | undefined;
 };
 
 export interface NewOrderRequestBody {
