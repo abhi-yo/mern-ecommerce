@@ -12,7 +12,7 @@ export const connectDB = (uri: string) => {
     .catch((e) => console.log(e));
 };
 
-export const invalidateCache = async ({
+export const invalidateCache = ({
   product,
   order,
   admin,
@@ -45,6 +45,12 @@ export const invalidateCache = async ({
     myCache.del(ordersKeys);
   }
   if (admin) {
+    myCache.del([
+      "admin-stats",
+      "admin-pie-chart",
+      "admin-bar-chart",
+      "admin-line-chart",
+    ]);
   }
 };
 
@@ -60,7 +66,7 @@ export const reduceStock = async (orderItems: OrderItemType[]) => {
 
 export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
   if (lastMonth === 0) return thisMonth * 100;
-  const percent = ((thisMonth - lastMonth) / lastMonth) * 100;
+  const percent = (thisMonth / lastMonth) * 100;
   return percent.toFixed(0);
 };
 
@@ -86,4 +92,39 @@ export const getInventories = async ({
   });
 
   return categoryCount;
+};
+
+interface MyDocument extends mongoose.Document {
+  createdAt: Date;
+  discount?: number;
+  total?: number;
+}
+
+type FuncProps = {
+  length: number;
+  docArr: MyDocument[];
+  today: Date;
+  property?: "discount" | "total";
+};
+
+export const getChartData = ({
+  length,
+  docArr,
+  today,
+  property,
+}: FuncProps) => {
+  const data: number[] = new Array(length).fill(0);
+  docArr.forEach((i) => {
+    const creationDate = i.createdAt;
+    const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+    if (monthDiff < length) {
+      if (property) {
+        data[length - monthDiff - 1] += i[property]!;
+      } else {
+        data[length - monthDiff - 1] += 1;
+      }
+    }
+  });
+
+  return data;
 };
