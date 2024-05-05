@@ -1,5 +1,5 @@
 const OrderDetails = () => {
-  return <div>order-details</div>;
+  return <div>OrderDetails</div>;
 };
 
 export default OrderDetails;

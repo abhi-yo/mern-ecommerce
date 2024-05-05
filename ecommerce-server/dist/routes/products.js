@@ -17,5 +17,6 @@ app
     .route("/:id")
     .get(getSingleProduct)
     .put(adminOnly, singleUpload, updateProduct)
+    .post(adminOnly, singleUpload, updateProduct)
     .delete(adminOnly, deleteProduct);
 export default app;

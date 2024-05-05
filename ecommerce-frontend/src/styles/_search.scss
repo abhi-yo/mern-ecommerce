@@ -6,7 +6,6 @@
   > aside {
     min-width: 20rem;
     box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.247);
-    @include baseShadow;
     padding: 2rem;
     @include flex(column, flex-start, stretch, 0.5rem);
     > h2 {
@@ -34,6 +33,7 @@
     > h1 {
       @include heading;
     }
+
     > input {
       @include inputStyle(50%);
       border-radius: 5px;
@@ -48,7 +48,7 @@
       height: calc(100% - 10rem);
       overflow-y: auto;
     }
-
+    // $p: 0.5rem 1rem, $bg, $color
     article {
       @include flex;
       > button {

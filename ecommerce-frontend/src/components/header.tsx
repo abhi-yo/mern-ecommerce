@@ -1,19 +1,34 @@
+import { Link } from "react-router-dom";
 import {
   FaSearch,
   FaShoppingBag,
   FaSignInAlt,
-  FaSignOutAlt,
   FaUser,
+  FaSignOutAlt,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { User } from "../types/types";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import toast from "react-hot-toast";
 
-const user = { _id: "abcd", role: "admin" };
-const Header = () => {
+interface PropsType {
+  user: User | null;
+}
+
+const Header = ({ user }: PropsType) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const logoutHandler = () => {
-    setIsOpen(false);
+
+  const logoutHandler = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Sign Out Successfully");
+      setIsOpen(false);
+    } catch (error) {
+      toast.error("Sign Out Fail");
+    }
   };
+
   return (
     <nav className="header">
       <Link onClick={() => setIsOpen(false)} to={"/"}>
@@ -38,6 +53,7 @@ const Header = () => {
                   Admin
                 </Link>
               )}
+
               <Link onClick={() => setIsOpen(false)} to="/orders">
                 Orders
               </Link>
